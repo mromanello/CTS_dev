@@ -3,4 +3,6 @@ for citations of classical primary sources encoded using a customised microforma
 
 This version of the extension is synchronised with the encoding pattern #2 described at <http://wiki.digitalclassicist.org/Citations_with_CTS_and_Microformats>.
 
-An working example of microformatted data that will be detected by this extension in contained in the file example_snippet.html
+A working example of microformatted data that will be detected by this extension in contained in the file example_snippet.html
+
+To use these user scripts with Operator, you must use Options->User Scripts to add them to Operator. After adding them, restart the browser.
