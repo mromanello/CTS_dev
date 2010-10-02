@@ -1,0 +1,6 @@
+This is an extension to the Firefox add-on Operator adding support 
+for citations of classical primary sources encoded using a customised microformat and CTS URNs.
+
+This version of the extension is synchronised with the encoding pattern #2 described at <http://wiki.digitalclassicist.org/Citations_with_CTS_and_Microformats>.
+
+An working example of microformatted data that will be detected by this extension in contained in the file example_snippet.html

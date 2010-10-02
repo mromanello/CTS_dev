@@ -16,4 +16,4 @@ var delicious_search_related_tags = {
     }
 };
 
-SemanticActions.add("delicious_search_tags", delicious_search_related_tags);≈
+SemanticActions.add("delicious_search_tags", delicious_search_related_tags);
