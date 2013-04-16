@@ -101,7 +101,7 @@ function CanonicalReference(input){
 		$.ajax({
 		 url: 'test-ajax.html',
 		 success: function(data) {
-		   //alert('Load was performed.');
+		   alert('Load was performed.');
 		   return 'done';
 		 }
 	   });
