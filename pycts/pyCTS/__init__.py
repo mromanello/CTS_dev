@@ -1,3 +1,5 @@
+# coding: utf-8
+
 class BadCtsUrnSyntax(Exception):
 	"""docstring for BadCtsUrnSyntax"""
 	pass
@@ -12,6 +14,10 @@ class CTS_URN(object):
 	>>> urn_string = "urn:cts:greekLit:tlg0003.tlg001"
 	>>> urn = CTS_URN(urn_string)
 	
+	>>> urn_string = u"urn:cts:greekLit:tlg0008.tlg001:173f#δημήτριος"
+	>>> print CTS_URN(urn_string)
+	urn:cts:greekLit:tlg0008.tlg001:173f#δημήτριος
+	
 	"""
 	def __init__(self,inp_string):
 		self._as_string  = inp_string
@@ -21,6 +27,13 @@ class CTS_URN(object):
 		self._version = None
 		self._work = None
 		self._textgroup = None
+		self._passage_node = None
+		self._range_begin = None
+		self._range_end = None
+		self._subref1 = None
+		self._subref_idx1 = None
+		self._subref2 = None
+		self._subref_idx2 = None
 		
 		try:
 			self._initialize_URN(inp_string)
@@ -56,6 +69,10 @@ class CTS_URN(object):
 	def textgroup(self):
 		"""docstring for textgroup"""
 		return self._textgroup
+	
+	def is_range(self):
+		"""docstring for is_range"""
+		return self._range_begin is not None
 	
 	def _initialize_URN(self,urn_string):
 		"""
@@ -110,30 +127,101 @@ class CTS_URN(object):
 				self._initialize_point(range_components[0])
 		return
 	
-	def _initialize_range(self,range_beg,range_end):
-		"""docstring for initialize_range"""
-		pass
+	def _index_subref(self,istring):
+		"""docstring for _index_subref"""
+		import re
+		regexp = re.compile(r'(.*)\[(.+)\]')
+		match = regexp.match(istring)
+		if(match is not None):
+			return match.groups()
+		else:
+			return (istring,)
+	
+	def _parse_scope(self,istring):
+		"""docstring for _parse_scope"""
+		result = None
+		split_sub = istring.split('#')
+		size = len(split_sub)
+		if(size ==1):
+			return (split_sub[0],)
+		elif(size == 2):
+			return (split_sub[0],) + self._index_subref(split_sub[1])
+		return result
+	
+	def _initialize_range(self,str1,str2):
+		"""docstring for initialize_range"""	
+		temp = self._parse_scope(str1)
+		if(len(temp)==1):
+			self._range_begin = temp[0]
+		elif(len(temp)==2):
+			self._range_begin = temp[0]
+			self._subref1 = temp[1]
+		elif(len(temp)==3):
+			self._range_begin = temp[0]
+			self._subref1 = temp[1]
+			self._subref_idx1 = int(temp[2])
+		else:
+			raise BadCtsUrnSyntax("Bad URN syntax in \"%s\""%point)
+			
+		temp = self._parse_scope(str2)
+		if(len(temp)==1):
+			self._range_end = temp[0]
+		elif(len(temp)==2):
+			self._range_end = temp[0]
+			self._subref2 = temp[1]
+		elif(len(temp)==3):
+			self._range_end = temp[0]
+			self._subref2 = temp[1]
+			self._subref_idx2 = int(temp[2])
+		else:
+			raise BadCtsUrnSyntax("Bad URN syntax in \"%s\""%point)
 	
 	def _initialize_point(self,point):
-		"""docstring for initialize_range"""
-		pass
+		"""
+		docstring for initialize_range
+		"""
+		temp = self._parse_scope(point)
+		if(len(temp)==1):
+			self._passage_node = temp[0]
+		elif(len(temp)==2):
+			self._passage_node = temp[0]
+			self._subref1 = temp[1]
+		elif(len(temp)==3):
+			self._passage_node = temp[0]
+			self._subref1 = temp[1]
+			self._subref_idx1 = int(temp[2])
+		else:
+			raise BadCtsUrnSyntax("Bad URN syntax in \"%s\""%point)
 	
 	def get_urn_without_passage(self):
 		"""docstring for get_urn_without_passage"""
 		pass
 	
+	def get_passage(self,limit):
+		"""docstring for get_passage"""
+		pass
+	
+	def get_leaf_ref_value(self):
+		"""docstring for get_leaf_ref_value"""
+		pass
+	
+	def get_citation_depth(self):
+		"""docstring for get_citation_depth"""
+		pass
+	
+	def trim_passage(self):
+		"""docstring for trim_passage"""
+		pass
+	
+	def __unicode__(self):
+		return self._as_string
+	
 	def __str__(self):
 		"""
 		docstring for __str__
-		
-		>>> urn_string = "urn:cts:greekLit:tlg0003.tlg001"
-		>>> print CTS_URN(urn_string)
-		urn:cts:greekLit:tlg0003.tlg001
-		
 		"""
-		return self._as_string
-
+		return unicode(self).encode('utf-8')
+	
 if __name__ == "__main__":
 	import doctest
 	doctest.testmod()
-	
