@@ -195,11 +195,21 @@ class CTS_URN(object):
 	
 	def get_urn_without_passage(self):
 		"""docstring for get_urn_without_passage"""
-		pass
+		return u"urn:cts:%s:%s"%(self._cts_namespace,self._work_component)
 	
 	def get_passage(self,limit):
 		"""docstring for get_passage"""
-		pass
+		psg_vals = self._passage_component.split('.')
+		passage = [psg_vals[0]]
+		count = 1
+		if(limit > len(psg_vals)):
+			return self._passage_component
+		else:
+			while(count < limit):
+				passage.append(psg_vals[count])
+				count += 1
+			return ".".join(passage)
+			
 	
 	def get_leaf_ref_value(self):
 		"""docstring for get_leaf_ref_value"""
@@ -207,11 +217,11 @@ class CTS_URN(object):
 	
 	def get_citation_depth(self):
 		"""docstring for get_citation_depth"""
-		pass
+		return len(self._passage_component.split('.'))
 	
-	def trim_passage(self):
+	def trim_passage(self,limit):
 		"""docstring for trim_passage"""
-		pass
+		return "%s:%s"%(self.get_urn_without_passage(),self.get_passage(limit))
 	
 	def __unicode__(self):
 		return self._as_string
